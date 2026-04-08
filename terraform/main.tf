@@ -32,6 +32,7 @@ resource "google_compute_firewall" "firewall" {
 resource "google_compute_instance" "vm" {
   name         = "demo-vm"
   machine_type = "e2-micro"
+  project      = var.project_id
   zone         = var.zone
 
   boot_disk {
