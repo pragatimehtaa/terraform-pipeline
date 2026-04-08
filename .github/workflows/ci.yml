@@ -1,0 +1,32 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, dev]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Terraform Files Exist
+        run: |
+          if [ ! -d "terraform" ]; then
+            echo "Terraform folder missing"
+            exit 1
+          fi
+
+      - name: Create Build Info
+        run: |
+          echo "CI Pipeline Run" > build.txt
+          echo "Run ID: $GITHUB_RUN_ID" >> build.txt
+          echo "Commit: $GITHUB_SHA" >> build.txt
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-artifact
+          path: build.txt

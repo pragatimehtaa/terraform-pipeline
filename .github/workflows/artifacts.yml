@@ -1,0 +1,27 @@
+name: Artifact Tracker
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create Run Metadata
+        run: |
+          echo "Run ID: $GITHUB_RUN_ID" > info.txt
+          echo "Repository: $GITHUB_REPOSITORY" >> info.txt
+          echo "Branch: $GITHUB_REF" >> info.txt
+          echo "Actor: $GITHUB_ACTOR" >> info.txt
+          echo "Timestamp: $(date)" >> info.txt
+
+      - name: Upload Run Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-metadata
+          path: info.txt

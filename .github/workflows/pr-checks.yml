@@ -1,0 +1,32 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Check Terraform Files
+        run: |
+          if [ ! -f "terraform/main.tf" ]; then
+            echo "main.tf missing"
+            exit 1
+          fi
+
+      - name: Generate Preview Info
+        run: |
+          echo "PR Validation" > pr.txt
+          echo "PR Number: ${{ github.event.number }}" >> pr.txt
+          echo "Author: ${{ github.actor }}" >> pr.txt
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-artifact
+          path: pr.txt
