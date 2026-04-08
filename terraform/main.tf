@@ -2,6 +2,7 @@
 resource "google_compute_network" "vpc" {
   name                    = "demo-vpc"
   auto_create_subnetworks = false
+  project                 = var.project_id
 }
 
 # Subnet
@@ -9,6 +10,7 @@ resource "google_compute_subnetwork" "subnet" {
   name          = "demo-subnet"
   ip_cidr_range = "10.0.1.0/24"
   region        = var.region
+  project       = var.project_id
   network       = google_compute_network.vpc.id
 }
 
@@ -16,6 +18,7 @@ resource "google_compute_subnetwork" "subnet" {
 resource "google_compute_firewall" "firewall" {
   name    = "allow-http-ssh"
   network = google_compute_network.vpc.name
+  project = var.project_id
 
   allow {
     protocol = "tcp"
@@ -47,4 +50,5 @@ resource "google_compute_instance" "vm" {
 resource "google_storage_bucket" "bucket" {
   name     = "${var.project_id}-demo-bucket"
   location = var.region
+  project  = var.project_id
 }
